@@ -26,7 +26,7 @@ class _HomeState extends State<Home> {
       onVerticalDragUpdate: (details) {
         int sensitivity = 8;
         if (details.delta.dy < -sensitivity) {
-          // swipeUps++;
+          swipeUps++;
         }
       },
       child: Scaffold(

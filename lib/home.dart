@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:system_alert_window/system_alert_window.dart';
+// import 'package:system_alert_window/system_alert_window.dart';
 import 'model_theme.dart';
 import 'package:provider/provider.dart';
-import 'dart:html' as html;
+import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
           });
         },
         onVerticalDragUpdate: (details) {
-          int sensitivity = 20;
+          int sensitivity = 10;
           if (details.delta.dy < -sensitivity) {
             isUp = true;
           }
@@ -61,8 +61,9 @@ class _HomeState extends State<Home> {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           if (isUp) {
             setState(() {
-              prefs.setInt('sharedSwipeUps', swipeUps++);
-              // swipeUps++;
+              if (prefs.getBool('sharedIsCounting') ?? true) {
+                prefs.setInt('sharedSwipeUps', swipeUps++);
+              }
             });
           }
           isUp = false;
@@ -202,9 +203,7 @@ class _HomeState extends State<Home> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        html.window.open(
-                                            'https://github.com/dheeraj-mishra/tapper',
-                                            "_blank");
+                                        _launchURL();
                                       },
                                       child: Container(
                                         width: 0.4 * screenWidth,
@@ -264,7 +263,7 @@ Widget mainCard(screenWidth, totalCount, title, context) {
           fit: BoxFit.scaleDown,
           child: Text(
             "$totalCount",
-            style: TextStyle(fontSize: 0.25 * screenWidth),
+            style: TextStyle(fontSize: 0.2 * screenWidth),
           ),
         ),
         FittedBox(
@@ -289,3 +288,14 @@ Widget mainCard(screenWidth, totalCount, title, context) {
 // Widget buildSheet(screenWidth, isCounting){
 //
 // }
+
+_launchURL() async {
+  const url = 'https://github.com/dheeraj-mishra';
+  final uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    print("launching.");
+    await launchUrl(uri);
+  } else {
+    throw 'Could not launch $url';
+  }
+}

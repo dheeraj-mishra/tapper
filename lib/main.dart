@@ -18,11 +18,14 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
             home: Home(),
             theme: themeNotifier.isDark
-                ? ThemeData.dark()
+                ? ThemeData(
+                    brightness: Brightness.dark,
+                    // primarySwatch: Colors.blueGrey,
+                    fontFamily: "Poppins")
                 : ThemeData(
                     brightness: Brightness.light,
                     primarySwatch: Colors.blueGrey,
-                  ));
+                    fontFamily: "Poppins"));
       }),
     );
   }

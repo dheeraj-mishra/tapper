@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:system_alert_window/system_alert_window.dart';
+import 'package:system_alert_window/system_alert_window.dart';
 import 'model_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,6 +21,8 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     loadData();
+    getPermission();
+    overlayInit(context);
   }
 
   void loadData() async {
@@ -30,6 +32,10 @@ class _HomeState extends State<Home> {
       isCounting = prefs.getBool('sharedIsCounting') ?? true;
       swipeUps = prefs.getInt('sharedSwipeUps') ?? 0;
     });
+  }
+
+  getPermission() async {
+    await SystemAlertWindow.requestPermissions;
   }
 
   @override
@@ -298,4 +304,16 @@ _launchURL() async {
   } else {
     throw 'Could not launch $url';
   }
+}
+
+overlayInit(BuildContext context) {
+  SystemAlertWindow.showSystemWindow(
+    header: SystemWindowHeader(),
+    height: 200,
+    width: 200,
+    backgroundColor: Colors.red,
+    // height: double.infinity.toInt(),
+    // width: double.infinity.toInt(),
+    // backgroundColor: Color.fromARGB(0, 255, 255, 255),
+  );
 }
